@@ -26,6 +26,7 @@ import {
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import api from "../../utils/api";
+import dayjs from "dayjs";
 
 interface Event {
   id: number;
@@ -72,8 +73,8 @@ const EventList = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [orderBy, setOrderBy] = useState<keyof Event>("title");
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  // const [orderBy, setOrderBy] = useState<keyof Event>("title");
+  // const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [deletePassword, setDeletePassword] = useState(""); // Password for deletion
@@ -192,8 +193,8 @@ const EventList = () => {
                   </TableCell>
                   <TableCell>{event.title}</TableCell>
                   <TableCell>{event.location}</TableCell>
-                  <TableCell>{event.startDate}</TableCell>
-                  <TableCell>{event.endDate}</TableCell>
+                  <TableCell>{event.startDate ? dayjs(event.startDate).format("DD-MM-YYYY") : ""}</TableCell>
+                  <TableCell>{event.endDate ? dayjs(event.endDate).format("DD-MM-YYYY") : ""}</TableCell>
                   <TableCell>{event.status}</TableCell>
                   <TableCell>
                     <Button

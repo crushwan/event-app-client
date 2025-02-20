@@ -35,24 +35,25 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Get the existing poster URL (from form state)
-    const existingPosterUrl = getValues("posterUrl");
+    // ALready handle by backend
+    // Get the existing poster URL (from form state) 
+    // const existingPosterUrl = getValues("posterUrl");
 
-    if (existingPosterUrl) {
-      // Extract the correct file path (remove the base URL)
-      const baseUrl = "https://vkoxiunflgpfgwqaddef.supabase.co/storage/v1/object/public/posters/";
-      const oldFilePath = existingPosterUrl.replace(baseUrl, ""); // ✅ Extract file path only
+    // if (existingPosterUrl) {
+    //   // Extract the correct file path (remove the base URL)
+    //   const baseUrl = "https://vkoxiunflgpfgwqaddef.supabase.co/storage/v1/object/public/posters/";
+    //   const oldFilePath = existingPosterUrl.replace(baseUrl, ""); // ✅ Extract file path only
 
-      if (oldFilePath) {
-        // Delete old poster from Supabase
-        const { error: deleteError } = await supabase.storage.from("posters").remove([oldFilePath]);
-        if (deleteError) {
-          console.error("Failed to delete old image:", deleteError.message);
-        } else {
-          console.log("Old image deleted successfully:", oldFilePath);
-        }
-      }
-    }
+    //   if (oldFilePath) {
+    //     // Delete old poster from Supabase
+    //     const { error: deleteError } = await supabase.storage.from("posters").remove([oldFilePath]);
+    //     if (deleteError) {
+    //       console.error("Failed to delete old image:", deleteError.message);
+    //     } else {
+    //       console.log("Old image deleted successfully:", oldFilePath);
+    //     }
+    //   }
+    // }
 
     const filePath = `posters/${Date.now()}_${file.name}`;
     const { error } = await supabase.storage.from("posters").upload(filePath, file);
@@ -73,8 +74,8 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         onSubmit={handleSubmit((data) =>
           onSubmit({
             ...data,
-            startDate: dayjs(data.startDate).format("YYYY-MM-DD"),
-            endDate: dayjs(data.endDate).format("YYYY-MM-DD"),
+            // startDate: dayjs(data.startDate).format("YYYY-MM-DD"),
+            // endDate: dayjs(data.endDate).format("YYYY-MM-DD"),
           })
         )}
         style={{ display: "flex", flexDirection: "column", gap: 15, maxWidth: 400, margin: "auto" }}
@@ -101,8 +102,8 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
             render={({ field }) => (
               <DatePicker
                 label="Start Date"
-                value={field.value}
-                onChange={(newValue) => field.onChange(newValue)}
+                value={field.value ? dayjs(field.value) : null}
+                onChange={(newValue) => field.onChange(newValue ? newValue.toISOString() : null)}
               />
             )}
           />
@@ -112,8 +113,9 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
             render={({ field }) => (
               <DatePicker
                 label="End Date"
-                value={field.value}
-                onChange={(newValue) => field.onChange(newValue)}
+                value={field.value ? dayjs(field.value) : null}
+                minDate={dayjs(getValues("startDate"))}
+                onChange={(newValue) => field.onChange(newValue ? newValue.toISOString() : null)}
               />
             )}
           />

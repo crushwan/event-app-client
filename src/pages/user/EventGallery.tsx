@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, Card, CardMedia, CardContent, TablePagination } from "@mui/material";
+import dayjs from "dayjs";
 
 const fetchEvents = async (page: number, rowsPerPage: number) => {
   const response = await fetch(`http://localhost:4000/events?page=${page + 1}&limit=${rowsPerPage}`);
@@ -60,7 +61,7 @@ export default function EventGallery() {
                   📍 {event.location}
                 </Typography>
                 <Typography variant="body2" mt={1} fontWeight="medium">
-                  🗓️ {event.startDate} - {event.endDate}
+                  🗓️ {event.startDate ? dayjs(event.startDate).format("DD-MM-YYYY") : ""} - {event.endDate ? dayjs(event.endDate).format("DD-MM-YYYY") : ""}
                 </Typography>
                 <Typography
                   variant="body2"

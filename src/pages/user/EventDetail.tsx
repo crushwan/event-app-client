@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Box, Typography, Card, Chip } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
 const fetchEventById = async (id: string) => {
   const response = await fetch(`http://localhost:4000/events/${id}`);
@@ -72,7 +73,7 @@ export default function EventDetail() {
             📍 {event.location}
           </Typography>
           <Typography variant="body1" fontWeight="medium" mt={2}>
-            🗓️ {event.startDate} - {event.endDate}
+            🗓️ {event.startDate ? dayjs(event.startDate).format("DD-MM-YYYY") : ""} - {event.endDate ? dayjs(event.endDate).format("DD-MM-YYYY") : ""}
           </Typography>
           <Chip
             label={event.status}

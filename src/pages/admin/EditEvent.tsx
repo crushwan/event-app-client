@@ -9,8 +9,6 @@ const fetchEvent = async (id: string) => {
   const data = await response.json();
   return {
     ...data,
-    startDate: data.startDate ? dayjs(data.startDate) : null,
-    endDate: data.endDate ? dayjs(data.endDate) : null,
   };
 };
 
@@ -19,22 +17,22 @@ export default function EditEvent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // ✅ Fetch event data using TanStack Query
+  // Fetch event data using TanStack Query
   const { data: event, isLoading, isError } = useQuery({
     queryKey: ["event", id], // Cache key for event
     queryFn: () => fetchEvent(id!),
     enabled: !!id, // Only run if id exists
   });
 
-  // ✅ Mutation for updating the event
+  //  Mutation for updating the event
   const updateEvent = useMutation({
     mutationFn: async (data: any) => {
       const formattedData = {
         ...data,
-        startDate: data.startDate ? dayjs(data.startDate).format("YYYY-MM-DD") : null,
-        endDate: data.endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
-        // startDate: data.startDate ? data.startDate.toISOString() : null,
-        // endDate: data.endDate ? data.endDate.toISOString() : null,
+        // startDate: data.startDate ? dayjs(data.startDate).format("YYYY-MM-DD") : null,
+        // endDate: data.endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
+        startDate: data.startDate ? dayjs(data.startDate).toISOString() : null,
+        endDate: data.endDate ? dayjs(data.endDate).toISOString() : null,
         posterUrl: data.posterUrl,
       };
 
@@ -61,7 +59,13 @@ export default function EditEvent() {
   return (
     <div style={{ padding: 20 }}>
       <h2>Edit Event</h2>
-      <EventForm defaultValues={event} onSubmit={updateEvent.mutate} />
+      <EventForm
+        defaultValues={{
+          ...event,
+          startDate: event.startDate ? dayjs(event.startDate).format("YYYY-MM-DD") : "",
+          endDate: event.endDate ? dayjs(event.endDate).format("YYYY-MM-DD") : ""
+        }}
+        onSubmit={updateEvent.mutate} />
     </div>
   );
 }

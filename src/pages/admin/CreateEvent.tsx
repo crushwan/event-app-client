@@ -11,8 +11,10 @@ export default function CreateEvent() {
     mutationFn: async (data: any) => {
       const formattedData = {
         ...data,
-        startDate: data.startDate ? dayjs(data.startDate).format("YYYY-MM-DD") : null,
-        endDate: data.endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
+        // startDate: data.startDate ? dayjs(data.startDate).format("YYYY-MM-DD") : null,
+        // endDate: data.endDate ? dayjs(data.endDate).format("YYYY-MM-DD") : null,
+        startDate: data.startDate ? dayjs(data.startDate).toISOString() : null,
+        endDate: data.endDate ? dayjs(data.endDate).toISOString() : null,
         posterUrl: data.posterUrl,
       };
 
